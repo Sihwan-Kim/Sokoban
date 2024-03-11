@@ -1,9 +1,14 @@
 ﻿using System;
 
-public class Field
+
+namespace Sokoban
 {
-    public int[,] fieldArray = new int[10, 10]
+    internal class Field
     {
+        public readonly Bitmap[] icons = {Properties.Resources.Empty, Properties.Resources.brick, Properties.Resources.Box, Properties.Resources.target, Properties.Resources.Box, Properties.Resources.Empty};
+
+        public int[,] fieldArray = new int[10, 10]
+        {
         { 0,0,1,1,1,0,0,0,0,0 },
         { 0,0,1,3,1,0,0,0,0,0 },
         { 0,0,1,0,1,1,1,1,0,0 },
@@ -14,14 +19,14 @@ public class Field
         { 0,0,0,1,1,1,0,0,0,0 },
         { 0,0,0,0,0,0,0,0,0,0 },
         { 0,0,0,0,0,0,0,0,0,0 },
-    };
+        };
 
-	public Field()
-	{		
-	}
+        public Field()
+        {
+        }
 
-	public void loadField(int StageNumber)
-	{
-	}
-
+        public void loadField(int StageNumber)
+        {
+        }
+    }
 }
