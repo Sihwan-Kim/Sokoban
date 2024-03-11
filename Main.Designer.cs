@@ -37,9 +37,9 @@
             // 
             // statusStrip1
             // 
-            statusStrip1.Location = new Point(0, 371);
+            statusStrip1.Location = new Point(0, 326);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(624, 22);
+            statusStrip1.Size = new Size(519, 22);
             statusStrip1.TabIndex = 3;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -50,7 +50,7 @@
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(193, 371);
+            panel1.Size = new Size(193, 326);
             panel1.TabIndex = 4;
             // 
             // button1
@@ -68,13 +68,12 @@
             panelGameFiled.ColumnCount = 2;
             panelGameFiled.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             panelGameFiled.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            panelGameFiled.Dock = DockStyle.Fill;
             panelGameFiled.Location = new Point(193, 0);
             panelGameFiled.Name = "panelGameFiled";
             panelGameFiled.RowCount = 2;
             panelGameFiled.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             panelGameFiled.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            panelGameFiled.Size = new Size(431, 371);
+            panelGameFiled.Size = new Size(320, 320);
             panelGameFiled.TabIndex = 5;
             // 
             // frmMain
@@ -82,7 +81,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(624, 393);
+            ClientSize = new Size(519, 348);
             Controls.Add(panelGameFiled);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);

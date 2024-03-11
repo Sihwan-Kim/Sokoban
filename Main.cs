@@ -2,9 +2,12 @@ namespace Sokoban
 {
     public partial class frmMain:Form
     {
+        GamePlay gamePlay;
         public frmMain()
         {
             InitializeComponent();
+
+            gamePlay = new GamePlay();
         }
         //----------------------------------------------------------------------------------------
         private void button1_Click(object sender, EventArgs e)
@@ -25,15 +28,20 @@ namespace Sokoban
                 panelGameFiled.RowStyles.Add(new RowStyle() { SizeType = SizeType.AutoSize });
             }
 
+
+            displayGame();
+            //((PictureBox)panelGameFiled.GetControlFromPosition(0, 0)).Image = Properties.Resources.Box;
+        }
+        //----------------------------------------------------------------------------------------
+        private void displayGame()
+        {
             for(int y = 0; y<panelGameFiled.RowCount; y++) 
             {
                 for(int x = 0; x<panelGameFiled.ColumnCount; x++) 
                 {
-                    panelGameFiled.Controls.Add(new PictureBox() { Image = Properties.Resources.Box, SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                    panelGameFiled.Controls.Add(new PictureBox() { Image = gamePlay.icons[gamePlay.field.fieldArray[x,y]], SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
                 }
             }
-
-            //((PictureBox)panelGameFiled.GetControlFromPosition(0, 0)).Image = Properties.Resources.Box;
         }
         //----------------------------------------------------------------------------------------
 
