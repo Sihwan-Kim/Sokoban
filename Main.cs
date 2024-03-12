@@ -8,15 +8,16 @@ namespace Sokoban
             InitializeComponent();
 
             gamePlay = new GamePlay();
+            makePlayGround(10, 10);
         }
         //----------------------------------------------------------------------------------------
-        private void button1_Click(object sender, EventArgs e)
+        private void makePlayGround(int x, int y)
         {
-            panelGameFiled.RowCount = 10;
-            panelGameFiled.ColumnCount = 10;
+            panelGameFiled.RowCount = x;
+            panelGameFiled.ColumnCount = y;
 
-            panelGameFiled.Width = 10 * 32;
-            panelGameFiled.Height = 10 * 32;
+            panelGameFiled.Width = x * 32;
+            panelGameFiled.Height = y * 32;
 
             for(int i = 0 ; i < panelGameFiled.ColumnCount ; i++)
             {
@@ -27,20 +28,57 @@ namespace Sokoban
             {
                 panelGameFiled.RowStyles.Add(new RowStyle() { SizeType = SizeType.AutoSize });
             }
-
-
-            displayGame();
+        }
+        //----------------------------------------------------------------------------------------
+        private void button1_Click(object sender, EventArgs e)
+        {
+            InitDisplayGame();
             //((PictureBox)panelGameFiled.GetControlFromPosition(0, 0)).Image = Properties.Resources.Box;
         }
         //----------------------------------------------------------------------------------------
-        private void displayGame()
+        private void InitDisplayGame()
         {
-            for(int y = 0; y<panelGameFiled.RowCount; y++) 
+            for(int x = 0 ; x < panelGameFiled.RowCount ; x++)
             {
-                for(int x = 0; x<panelGameFiled.ColumnCount; x++) 
+                for(int y = 0 ; y < panelGameFiled.ColumnCount ; y++)
                 {
-                    panelGameFiled.Controls.Add(new PictureBox() { Image = gamePlay.icons[gamePlay.field.fieldArray[x,y]], SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                    switch(gamePlay.field.fieldArray[x, y])
+                    {
+                        case 0x00: 
+                            panelGameFiled.Controls.Add(new PictureBox() { Image = Properties.Resources.empty, SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                            break;
+                        case 0x01: 
+                            panelGameFiled.Controls.Add(new PictureBox() { Image = Properties.Resources.target, SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                            break;
+                        case 0x02: 
+                            panelGameFiled.Controls.Add(new PictureBox() { Image = Properties.Resources.box, SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                            break;
+                        case 0x08: 
+                            panelGameFiled.Controls.Add(new PictureBox() { Image = Properties.Resources.brick, SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                            break;
+                    }                    
                 }
+            }
+
+            ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)).Image = Properties.Resources.down ;
+        }
+        //----------------------------------------------------------------------------------------
+        private void DirectionClick(object sender, EventArgs e)
+        {
+            Button direction = (Button)sender;
+
+            switch (direction.Tag.ToString())
+            {
+                case "6":
+                    break;
+                case "7":
+                    break;
+                case "8": 
+                    gamePlay.moveWorker(Direction.LEFT);
+                    break;
+                case "9":
+                    gamePlay.moveWorker(Direction.RIGHT);
+                    break;
             }
         }
         //----------------------------------------------------------------------------------------
