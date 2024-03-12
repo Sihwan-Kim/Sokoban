@@ -92,7 +92,7 @@
             buttonTop.Name = "buttonTop";
             buttonTop.Size = new Size(44, 44);
             buttonTop.TabIndex = 8;
-            buttonTop.Tag = "6";
+            buttonTop.Tag = "0";
             buttonTop.UseVisualStyleBackColor = true;
             buttonTop.Click += DirectionClick;
             // 
@@ -114,7 +114,7 @@
             buttonRight.Name = "buttonRight";
             buttonRight.Size = new Size(44, 44);
             buttonRight.TabIndex = 7;
-            buttonRight.Tag = "9";
+            buttonRight.Tag = "3";
             buttonRight.UseVisualStyleBackColor = true;
             buttonRight.Click += DirectionClick;
             // 
@@ -126,7 +126,7 @@
             buttonLeft.Name = "buttonLeft";
             buttonLeft.Size = new Size(44, 44);
             buttonLeft.TabIndex = 6;
-            buttonLeft.Tag = "8";
+            buttonLeft.Tag = "2";
             buttonLeft.UseVisualStyleBackColor = true;
             buttonLeft.Click += DirectionClick;
             // 
@@ -138,7 +138,7 @@
             buttonDown.Name = "buttonDown";
             buttonDown.Size = new Size(44, 44);
             buttonDown.TabIndex = 5;
-            buttonDown.Tag = "7";
+            buttonDown.Tag = "1";
             buttonDown.UseVisualStyleBackColor = true;
             buttonDown.Click += DirectionClick;
             // 

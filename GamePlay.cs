@@ -8,17 +8,6 @@ namespace Sokoban
 {
     internal class GamePlay
     {
-        public readonly Bitmap[] icons = {Properties.Resources.empty,   // 0
-                                          Properties.Resources.brick,   // 1 
-                                          Properties.Resources.box,     // 2
-                                          Properties.Resources.target,  // 3  
-                                          Properties.Resources.empty,   // 4 
-                                          Properties.Resources.box,     // 5
-                                          Properties.Resources.down,
-                                          Properties.Resources.top,
-                                          Properties.Resources.left,
-                                          Properties.Resources.right};  
-
         public Field field = new Field();
         public int Steps { get; set; }
         public int Times { get; set; }  // unit = sec 
@@ -51,7 +40,7 @@ namespace Sokoban
             Point otherPosition = new Point(field.worker.Position.X, field.worker.Position.Y);  // worker 이동 다음 위치 
 
             field.worker.MoveDirection = direction;  // worker 의 방향전환
-            field.fieldArray[field.worker.Position.X, field.worker.Position.Y] = Constants.Road; // worker 가 있던 위치의 초기화
+            field.fieldArray[field.worker.Position.X, field.worker.Position.Y] &= 0x0d; // worker 가 있던 위치의 초기화
 
             switch(direction)    // 이동방향에 따라 worker의 이동 위치 
             {
