@@ -113,8 +113,6 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            InitDisplayGame();
-            gamePlay.gameStart();
         }
         //----------------------------------------------------------------------------------------
         private void buttonBack_Click(object sender, EventArgs e)
@@ -126,10 +124,10 @@ namespace Sokoban
         {
             switch(keyData)
             {
-                case Keys.Up:    Move(Direction.TOP);       break;
-                case Keys.Down:  Move(Direction.BOTTOM);    break;
-                case Keys.Left:  Move(Direction.LEFT);      break;
-                case Keys.Right: Move(Direction.RIGHT);     break;
+                case Keys.Up: Move(Direction.TOP); break;
+                case Keys.Down: Move(Direction.BOTTOM); break;
+                case Keys.Left: Move(Direction.LEFT); break;
+                case Keys.Right: Move(Direction.RIGHT); break;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
@@ -146,6 +144,12 @@ namespace Sokoban
             {
                 MessageBox.Show("This Stage Cleared", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+        //----------------------------------------------------------------------------------------
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            InitDisplayGame();
+            gamePlay.gameStart();
         }
         //----------------------------------------------------------------------------------------
     }

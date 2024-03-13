@@ -29,7 +29,7 @@ namespace Sokoban
         private void timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             Times++;            
-            ReturnToTime!(Times.ToString());
+            ReturnToTime!(string.Format("{0:D2}:{1:D2}", Times/60, Times%60));
         }
         //----------------------------------------------------------------------------------------
         public void gameStart()

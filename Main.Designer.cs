@@ -45,6 +45,9 @@
             buttonReset = new Button();
             label2 = new Label();
             label4 = new Label();
+            label5 = new Label();
+            label6 = new Label();
+            btnStart = new Button();
             SuspendLayout();
             // 
             // statusStrip1
@@ -82,9 +85,9 @@
             // buttonBack
             // 
             buttonBack.Font = new Font("Tahoma", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            buttonBack.Location = new Point(18, 283);
+            buttonBack.Location = new Point(46, 259);
             buttonBack.Name = "buttonBack";
-            buttonBack.Size = new Size(75, 29);
+            buttonBack.Size = new Size(107, 29);
             buttonBack.TabIndex = 19;
             buttonBack.Text = "Back";
             buttonBack.UseVisualStyleBackColor = true;
@@ -94,7 +97,7 @@
             // 
             buttonTop.ImageIndex = 3;
             buttonTop.ImageList = imageList1;
-            buttonTop.Location = new Point(77, 138);
+            buttonTop.Location = new Point(77, 104);
             buttonTop.Name = "buttonTop";
             buttonTop.Size = new Size(44, 44);
             buttonTop.TabIndex = 18;
@@ -106,7 +109,7 @@
             // 
             buttonRight.ImageIndex = 2;
             buttonRight.ImageList = imageList1;
-            buttonRight.Location = new Point(127, 188);
+            buttonRight.Location = new Point(127, 154);
             buttonRight.Name = "buttonRight";
             buttonRight.Size = new Size(44, 44);
             buttonRight.TabIndex = 17;
@@ -118,7 +121,7 @@
             // 
             buttonLeft.ImageIndex = 1;
             buttonLeft.ImageList = imageList1;
-            buttonLeft.Location = new Point(27, 188);
+            buttonLeft.Location = new Point(27, 154);
             buttonLeft.Name = "buttonLeft";
             buttonLeft.Size = new Size(44, 44);
             buttonLeft.TabIndex = 16;
@@ -130,7 +133,7 @@
             // 
             buttonDown.ImageIndex = 0;
             buttonDown.ImageList = imageList1;
-            buttonDown.Location = new Point(77, 188);
+            buttonDown.Location = new Point(77, 154);
             buttonDown.Name = "buttonDown";
             buttonDown.Size = new Size(44, 44);
             buttonDown.TabIndex = 15;
@@ -141,7 +144,7 @@
             // labelTime
             // 
             labelTime.Font = new Font("Tahoma", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            labelTime.Location = new Point(77, 88);
+            labelTime.Location = new Point(77, 64);
             labelTime.Name = "labelTime";
             labelTime.Size = new Size(76, 18);
             labelTime.TabIndex = 14;
@@ -152,7 +155,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Tahoma", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(18, 88);
+            label3.Location = new Point(18, 64);
             label3.Name = "label3";
             label3.Size = new Size(53, 18);
             label3.TabIndex = 13;
@@ -161,7 +164,7 @@
             // labelStep
             // 
             labelStep.Font = new Font("Tahoma", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            labelStep.Location = new Point(77, 60);
+            labelStep.Location = new Point(77, 36);
             labelStep.Name = "labelStep";
             labelStep.Size = new Size(76, 18);
             labelStep.TabIndex = 12;
@@ -172,7 +175,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Tahoma", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(12, 60);
+            label1.Location = new Point(12, 36);
             label1.Name = "label1";
             label1.Size = new Size(59, 18);
             label1.TabIndex = 11;
@@ -181,9 +184,9 @@
             // buttonReset
             // 
             buttonReset.Font = new Font("Tahoma", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            buttonReset.Location = new Point(101, 283);
+            buttonReset.Location = new Point(44, 294);
             buttonReset.Name = "buttonReset";
-            buttonReset.Size = new Size(75, 29);
+            buttonReset.Size = new Size(109, 29);
             buttonReset.TabIndex = 10;
             buttonReset.Text = "Reset";
             buttonReset.UseVisualStyleBackColor = true;
@@ -192,7 +195,7 @@
             // label2
             // 
             label2.BorderStyle = BorderStyle.Fixed3D;
-            label2.Location = new Point(-1, 126);
+            label2.Location = new Point(-1, 93);
             label2.Name = "label2";
             label2.Size = new Size(195, 1);
             label2.TabIndex = 20;
@@ -200,10 +203,41 @@
             // label4
             // 
             label4.BorderStyle = BorderStyle.Fixed3D;
-            label4.Location = new Point(0, 252);
+            label4.Location = new Point(0, 211);
             label4.Name = "label4";
             label4.Size = new Size(195, 1);
             label4.TabIndex = 21;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Tahoma", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(12, 9);
+            label5.Name = "label5";
+            label5.Size = new Size(64, 18);
+            label5.TabIndex = 22;
+            label5.Text = "Stage : ";
+            // 
+            // label6
+            // 
+            label6.Font = new Font("Tahoma", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label6.Location = new Point(77, 9);
+            label6.Name = "label6";
+            label6.Size = new Size(76, 18);
+            label6.TabIndex = 23;
+            label6.Text = "Level-1";
+            label6.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // btnStart
+            // 
+            btnStart.Font = new Font("Tahoma", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnStart.Location = new Point(44, 224);
+            btnStart.Name = "btnStart";
+            btnStart.Size = new Size(109, 29);
+            btnStart.TabIndex = 24;
+            btnStart.Text = "Game Start";
+            btnStart.UseVisualStyleBackColor = true;
+            btnStart.Click += btnStart_Click;
             // 
             // frmMain
             // 
@@ -211,6 +245,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             ClientSize = new Size(519, 348);
+            Controls.Add(btnStart);
+            Controls.Add(label6);
+            Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label2);
             Controls.Add(buttonBack);
@@ -225,6 +262,7 @@
             Controls.Add(buttonReset);
             Controls.Add(panelGameFiled);
             Controls.Add(statusStrip1);
+            DoubleBuffered = true;
             KeyPreview = true;
             Name = "frmMain";
             StartPosition = FormStartPosition.CenterScreen;
@@ -249,5 +287,8 @@
         private Button buttonReset;
         private Label label2;
         private Label label4;
+        private Label label5;
+        private Label label6;
+        private Button btnStart;
     }
 }
