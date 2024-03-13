@@ -8,17 +8,39 @@ namespace Sokoban
 {
     internal class GamePlay
     {
+        public delegate void UpdateTimeInform(string time);
+        public event UpdateTimeInform? ReturnToTime;
+
         public Field field = new Field();
         public int Steps { get; set; }
         public int Times { get; set; }  // unit = sec 
+
+        private System.Timers.Timer timer = new System.Timers.Timer();        
         //----------------------------------------------------------------------------------------
         public GamePlay()
         {
             Steps = 0;
             Times = 0;
+
+            timer.Interval = 1000;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed) ;
         }
         //----------------------------------------------------------------------------------------
-        public bool CheckGameClear()
+        private void timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            Times++;            
+            ReturnToTime!(Times.ToString());
+        }
+        //----------------------------------------------------------------------------------------
+        public void gameStart()
+        {
+            Times = 0;
+            Steps = 0;
+
+            timer.Start();
+        }
+        //----------------------------------------------------------------------------------------
+        public bool CheckStageClear()
         {
             bool result = true;
 
@@ -93,6 +115,8 @@ namespace Sokoban
 
                 if(obj == Constants.Road || obj == Constants.Store) result = Constants.Box;  // 박스 건너편이 비어 있으면 이동할 수 있다. 
             }
+
+            if(result > -1) Steps++;
 
             return result;
         }
