@@ -32,12 +32,17 @@ namespace Sokoban
             ReturnToTime!(string.Format("{0:D2}:{1:D2}", Times/60, Times%60));
         }
         //----------------------------------------------------------------------------------------
-        public void gameStart()
+        public void Start()
         {
             Times = 0;
             Steps = 0;
 
             timer.Start();
+        }
+        //----------------------------------------------------------------------------------------
+        public void Stop()
+        {
+            timer.Stop();
         }
         //----------------------------------------------------------------------------------------
         public bool CheckStageClear()
@@ -88,9 +93,10 @@ namespace Sokoban
 
             if(obj >= 0) // 이동 가능할 경우 
             {
-                field.worker.Position = movePosition;
-                if(obj == Constants.Box) field.fieldArray[otherPosition.X, otherPosition.Y] = obj + Constants.Road; // worker 가 이동해야할 위치의 박스를 다음위치로 이동한다. 
-                field.fieldArray[movePosition.X, movePosition.Y] &= 0x0d ;  // worker 가 이동해야 할 위치를 원래 객체로 변경한다.  
+                field.worker.Position = movePosition;       // worker의 위치를 이동
+                field.fieldArray[movePosition.X, movePosition.Y] &= 0x0d ;  // worker가 이동해야 할 위치를 원래 객체로 변경한다.(박스가 있었다면 제거한다)  
+
+                if(obj == Constants.Box) field.fieldArray[otherPosition.X, otherPosition.Y] += obj ; // worker 가 이동해야할 위치의 박스를 다음위치로 이동한다. 
             }
         }
         //----------------------------------------------------------------------------------------

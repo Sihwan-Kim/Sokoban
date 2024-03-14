@@ -1,7 +1,13 @@
+using Windows.Devices.Display.Core;
+using Windows.Gaming.Input;
+
 namespace Sokoban
 {
     public partial class frmMain:Form
     {
+        private int StageNum = 1;
+        private readonly string stageFolder;
+
         public readonly Bitmap[] icons = { Properties.Resources.empty,
                                            Properties.Resources.target,
                                            Properties.Resources.box,
@@ -22,6 +28,8 @@ namespace Sokoban
             gamePlay.ReturnToTime += new GamePlay.UpdateTimeInform(UpdateTime);
 
             makePlayGround(10, 10);
+
+            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\" ;            
         }
         //----------------------------------------------------------------------------------------
         private void UpdateTime(string TimeInform)
@@ -29,13 +37,13 @@ namespace Sokoban
             this.Invoke(new Action(() => { labelTime.Text = TimeInform; }));
         }
         //----------------------------------------------------------------------------------------
-        private void makePlayGround(int x, int y)
+        private void makePlayGround(int X, int Y)
         {
-            panelGameFiled.RowCount = x;
-            panelGameFiled.ColumnCount = y;
+            panelGameFiled.RowCount = X;
+            panelGameFiled.ColumnCount = Y;
 
-            panelGameFiled.Width = x * 32;
-            panelGameFiled.Height = y * 32;
+            panelGameFiled.Width = X * 32;
+            panelGameFiled.Height = Y * 32;
 
             for(int i = 0 ; i < panelGameFiled.ColumnCount ; i++)
             {
@@ -46,29 +54,35 @@ namespace Sokoban
             {
                 panelGameFiled.RowStyles.Add(new RowStyle() { SizeType = SizeType.AutoSize });
             }
-        }
-        //----------------------------------------------------------------------------------------
-        private void InitDisplayGame()
-        {
-            for(int x = 0 ; x < panelGameFiled.RowCount ; x++)
+
+            for(int y = 0 ; y < panelGameFiled.RowCount ; y++)
             {
-                for(int y = 0 ; y < panelGameFiled.ColumnCount ; y++)
+                for(int x = 0 ; x < panelGameFiled.ColumnCount ; x++)
                 {
                     panelGameFiled.Controls.Add(new PictureBox() { Image = icons[gamePlay.field.fieldArray[x, y]], SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
                 }
             }
-
-            ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = Properties.Resources.down;
-            labelStep.Text = gamePlay.Steps.ToString();
-            labelTime.Text = "00:00";
         }
         //----------------------------------------------------------------------------------------
-        private void FieldUpdate(Point RootPosition, Direction Direct)
+        private void displayStage()
+        {
+            for(int y = 0 ; y < panelGameFiled.RowCount ; y++)
+            {
+                for(int x = 0 ; x < panelGameFiled.ColumnCount ; x++)
+                {
+                    ((PictureBox)panelGameFiled.GetControlFromPosition(x, y)!).Image = icons[gamePlay.field.fieldArray[x, y]];
+                }
+            }
+
+            ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = Properties.Resources.down;
+        }
+        //----------------------------------------------------------------------------------------
+        private void FieldUpdate(Point RootPosition)
         {
             Point pos1 = RootPosition;
             Point pos2 = RootPosition;
 
-            switch(Direct)
+            switch(gamePlay.field.worker.MoveDirection)
             {
                 case Direction.TOP:
                     pos1.Y -= 1;
@@ -90,12 +104,17 @@ namespace Sokoban
 
             int item1 = gamePlay.field.fieldArray[RootPosition.X, RootPosition.Y];
             int item2 = gamePlay.field.fieldArray[pos1.X, pos1.Y];
-            int item3 = gamePlay.field.fieldArray[pos2.X, pos2.Y];
 
             ((PictureBox)panelGameFiled.GetControlFromPosition(RootPosition.X, RootPosition.Y)!).Image = icons[item1];
             ((PictureBox)panelGameFiled.GetControlFromPosition(pos1.X, pos1.Y)!).Image = icons[item2];
-            ((PictureBox)panelGameFiled.GetControlFromPosition(pos2.X, pos2.Y)!).Image = icons[item3];
-            ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = worker[(int)Direct];
+
+            if(pos2.X >= 0 && pos2.X < 10 && pos2.Y >= 0 && pos2.Y < 10)
+            {
+                int item3 = gamePlay.field.fieldArray[pos2.X, pos2.Y];
+                ((PictureBox)panelGameFiled.GetControlFromPosition(pos2.X, pos2.Y)!).Image = icons[item3];
+            }
+
+            ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = worker[(int)gamePlay.field.worker.MoveDirection];
 
             labelStep.Text = gamePlay.Steps.ToString();
             labelTime.Text = gamePlay.Times.ToString();
@@ -107,7 +126,7 @@ namespace Sokoban
 
             if(button is not null)
             {
-                Move((Direction)int.Parse(button.Tag!.ToString()!));
+                WorkerMove((Direction)int.Parse(button.Tag!.ToString()!));
             }
         }
         //----------------------------------------------------------------------------------------
@@ -124,32 +143,35 @@ namespace Sokoban
         {
             switch(keyData)
             {
-                case Keys.Up: Move(Direction.TOP); break;
-                case Keys.Down: Move(Direction.BOTTOM); break;
-                case Keys.Left: Move(Direction.LEFT); break;
-                case Keys.Right: Move(Direction.RIGHT); break;
+                case Keys.Up: WorkerMove(Direction.TOP); break;
+                case Keys.Down: WorkerMove(Direction.BOTTOM); break;
+                case Keys.Left: WorkerMove(Direction.LEFT); break;
+                case Keys.Right: WorkerMove(Direction.RIGHT); break;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
         //----------------------------------------------------------------------------------------
-        private void Move(Direction direction)
+        private void WorkerMove(Direction direction)
         {
             Point rootPosition = gamePlay.field.worker.Position;  // worker가 처음 있던 위치 저장 
 
             gamePlay.moveWorker(direction);
-            FieldUpdate(rootPosition, direction);
+            FieldUpdate(rootPosition);
 
             if(gamePlay.CheckStageClear())
             {
+                gamePlay.Stop();
                 MessageBox.Show("This Stage Cleared", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                StageNum++;  // 다음 스테이지로 넘어간다. 
             }
         }
         //----------------------------------------------------------------------------------------
         private void btnStart_Click(object sender, EventArgs e)
         {
-            InitDisplayGame();
-            gamePlay.gameStart();
+            gamePlay.field.loadStage(string.Format("{0}level-{1}.txt",stageFolder, StageNum));
+            displayStage();
+            gamePlay.Start();
         }
         //----------------------------------------------------------------------------------------
     }
