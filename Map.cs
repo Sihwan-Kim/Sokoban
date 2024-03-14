@@ -12,35 +12,46 @@ namespace Sokoban
 
         }
         //----------------------------------------------------------------------------------------
-        public void loadStage(string StageFile)
+        public bool loadStage(string StageFile)
         {
-            using(StreamReader sr = new StreamReader(StageFile))
+            bool result = true;
+            try
             {
-                string? position = sr.ReadLine();
-                string[] pos = position!.Split(',');
-                int index = 0;
-
-                worker.Position.X = int.Parse(pos[0]);
-                worker.Position.Y = int.Parse(pos[1]);
-
-                while(!sr.EndOfStream)
+                using(StreamReader sr = new StreamReader(StageFile))
                 {
-                    string? line = sr.ReadLine();
+                    string? position = sr.ReadLine();
+                    string[] pos = position!.Split(',');
+                    int index = 0;
 
-                    if(line is not null)
+                    worker.Position.X = int.Parse(pos[0]);
+                    worker.Position.Y = int.Parse(pos[1]);
+
+                    while(!sr.EndOfStream)
                     {
-                        string[] data = line.Split(',');
-                        int x = 0;
+                        string? line = sr.ReadLine();
 
-                        foreach(var value in data)
+                        if(line is not null)
                         {
-                            fieldArray[x++, index] = int.Parse(value) ;
-                        }
+                            string[] data = line.Split(',');
+                            int x = 0;
 
-                        index++;
+                            foreach(var value in data)
+                            {
+                                fieldArray[x++, index] = int.Parse(value);
+                            }
+
+                            index++;
+                        }
                     }
                 }
             }
+            catch
+            {
+                MessageBox.Show("This is the last stage.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                result = false;
+            }
+
+            return result;
         }
         //----------------------------------------------------------------------------------------
     }

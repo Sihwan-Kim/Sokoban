@@ -81,6 +81,10 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void FieldUpdate(Point RootPosition, bool Undo)
         {
+            /*********************************************************
+             * 일반적인 이동에서는 최대 3개 픽셀에 변화가 생긴다.
+             * Undo 상황에서는 최대 2개 픽셀에 변화가 생긴다. 
+             *********************************************************/
             Point pos1 = gamePlay.getChangePosition(0);
             Point pos2 = gamePlay.getChangePosition(1);
 
@@ -113,7 +117,7 @@ namespace Sokoban
             }
         }
         //----------------------------------------------------------------------------------------
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)  // 방향키에 대항 이벤트 처리
         {
             if(KeyPreview)
             {
@@ -133,7 +137,6 @@ namespace Sokoban
             return base.ProcessCmdKey(ref msg, keyData);
         }
         //----------------------------------------------------------------------------------------
-
         private void btnStart_Click(object sender, EventArgs e)
         {
             gameStart();
@@ -141,10 +144,15 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void gameStart()
         {
-            gamePlay.field.loadStage(string.Format("{0}level-{1}.txt", stageFolder, StageNum));
-            displayInitStage();
-            gamePlay.Start();
-            this.KeyPreview = true;
+            var result = gamePlay.field.loadStage(string.Format("{0}level-{1}.txt", stageFolder, StageNum));
+
+            if(result == false) this.KeyPreview = false;
+            else
+            {
+                displayInitStage();
+                gamePlay.Start();
+                this.KeyPreview = true;
+            }
         }
         //----------------------------------------------------------------------------------------
         private void btnUndo_Click(object sender, EventArgs e)
