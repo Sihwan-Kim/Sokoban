@@ -52,4 +52,16 @@ namespace Sokoban
 
         public Worker(Point position) { this.Position = position; }
     }
+
+    internal class UndoInform
+    {
+        public Direction direction;
+        public bool pushInform;
+
+        public UndoInform(Direction direction, bool pushInform)
+        {
+            this.direction = direction;
+            this.pushInform = pushInform;
+        }
+    }
 }

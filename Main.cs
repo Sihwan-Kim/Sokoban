@@ -11,7 +11,7 @@ namespace Sokoban
         public readonly Bitmap[] icons = { Properties.Resources.empty,
                                            Properties.Resources.target,
                                            Properties.Resources.box,
-                                           Properties.Resources.box,
+                                           Properties.Resources.inbox,
                                            Properties.Resources.brick };
 
         public readonly Bitmap[] worker = { Properties.Resources.top,
@@ -27,9 +27,8 @@ namespace Sokoban
             gamePlay = new GamePlay();
             gamePlay.ReturnToTime += new GamePlay.UpdateTimeInform(UpdateTime);
 
-            makePlayGround(10, 10);
-
-            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\" ;            
+            makePlayGround(10, 10);                                                  // 10x10 형식의 게임스테이지를 만든다. 
+            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\";  // 게임스테이지가 들어있는 폴더 설정 
         }
         //----------------------------------------------------------------------------------------
         private void UpdateTime(string TimeInform)
@@ -42,8 +41,8 @@ namespace Sokoban
             panelGameFiled.RowCount = X;
             panelGameFiled.ColumnCount = Y;
 
-            panelGameFiled.Width = X * 32;
-            panelGameFiled.Height = Y * 32;
+            panelGameFiled.Width = X * Constants.IconSize;
+            panelGameFiled.Height = Y * Constants.IconSize;
 
             for(int i = 0 ; i < panelGameFiled.ColumnCount ; i++)
             {
@@ -59,12 +58,12 @@ namespace Sokoban
             {
                 for(int x = 0 ; x < panelGameFiled.ColumnCount ; x++)
                 {
-                    panelGameFiled.Controls.Add(new PictureBox() { Image = icons[gamePlay.field.fieldArray[x, y]], SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
+                    panelGameFiled.Controls.Add(new PictureBox() { Image = Properties.Resources.empty, SizeMode = PictureBoxSizeMode.AutoSize, Margin = new Padding(0) }, x, y);
                 }
             }
         }
         //----------------------------------------------------------------------------------------
-        private void displayStage()
+        private void displayInitStage()
         {
             for(int y = 0 ; y < panelGameFiled.RowCount ; y++)
             {
@@ -75,103 +74,110 @@ namespace Sokoban
             }
 
             ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = Properties.Resources.down;
+
+            labelLevel.Text = string.Format("Level-{0}", StageNum);
+            labelStep.Text = "0";
         }
         //----------------------------------------------------------------------------------------
-        private void FieldUpdate(Point RootPosition)
+        private void FieldUpdate(Point RootPosition, bool Undo)
         {
-            Point pos1 = RootPosition;
-            Point pos2 = RootPosition;
+            Point pos1 = gamePlay.getChangePosition(0);
+            Point pos2 = gamePlay.getChangePosition(1);
 
-            switch(gamePlay.field.worker.MoveDirection)
+            int item1 = gamePlay.field.fieldArray[pos1.X, pos1.Y];
+            int item2 = gamePlay.field.fieldArray[pos2.X, pos2.Y];
+
+            ((PictureBox)panelGameFiled.GetControlFromPosition(pos1.X, pos1.Y)!).Image = icons[item1];
+            ((PictureBox)panelGameFiled.GetControlFromPosition(pos2.X, pos2.Y)!).Image = icons[item2];
+
+            if(!Undo)
             {
-                case Direction.TOP:
-                    pos1.Y -= 1;
-                    pos2.Y -= 2;
-                    break;
-                case Direction.BOTTOM:
-                    pos1.Y += 1;
-                    pos2.Y += 2;
-                    break;
-                case Direction.LEFT:
-                    pos1.X -= 1;
-                    pos2.X -= 2;
-                    break;
-                case Direction.RIGHT:
-                    pos1.X += 1;
-                    pos2.X += 2;
-                    break;
-            }
-
-            int item1 = gamePlay.field.fieldArray[RootPosition.X, RootPosition.Y];
-            int item2 = gamePlay.field.fieldArray[pos1.X, pos1.Y];
-
-            ((PictureBox)panelGameFiled.GetControlFromPosition(RootPosition.X, RootPosition.Y)!).Image = icons[item1];
-            ((PictureBox)panelGameFiled.GetControlFromPosition(pos1.X, pos1.Y)!).Image = icons[item2];
-
-            if(pos2.X >= 0 && pos2.X < 10 && pos2.Y >= 0 && pos2.Y < 10)
-            {
-                int item3 = gamePlay.field.fieldArray[pos2.X, pos2.Y];
-                ((PictureBox)panelGameFiled.GetControlFromPosition(pos2.X, pos2.Y)!).Image = icons[item3];
+                int item3 = gamePlay.field.fieldArray[RootPosition.X, RootPosition.Y];
+                ((PictureBox)panelGameFiled.GetControlFromPosition(RootPosition.X, RootPosition.Y)!).Image = icons[item3];
             }
 
             ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = worker[(int)gamePlay.field.worker.MoveDirection];
 
             labelStep.Text = gamePlay.Steps.ToString();
-            labelTime.Text = gamePlay.Times.ToString();
         }
         //----------------------------------------------------------------------------------------
         private void DirectionClick(object sender, EventArgs e)
         {
             Button? button = sender as Button;
 
-            if(button is not null)
+            if(KeyPreview && button is not null)
             {
-                WorkerMove((Direction)int.Parse(button.Tag!.ToString()!));
-            }
-        }
-        //----------------------------------------------------------------------------------------
-        private void buttonReset_Click(object sender, EventArgs e)
-        {
-        }
-        //----------------------------------------------------------------------------------------
-        private void buttonBack_Click(object sender, EventArgs e)
-        {
+                var result = WorkerMove((Direction)int.Parse(button.Tag!.ToString()!));
 
+                if(result == DialogResult.Yes) gameStart();
+            }
         }
         //----------------------------------------------------------------------------------------
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            switch(keyData)
+            if(KeyPreview)
             {
-                case Keys.Up: WorkerMove(Direction.TOP); break;
-                case Keys.Down: WorkerMove(Direction.BOTTOM); break;
-                case Keys.Left: WorkerMove(Direction.LEFT); break;
-                case Keys.Right: WorkerMove(Direction.RIGHT); break;
+                DialogResult result = DialogResult.No;
+
+                switch(keyData)
+                {
+                    case Keys.Up: result = WorkerMove(Direction.TOP); break;
+                    case Keys.Down: result = WorkerMove(Direction.BOTTOM); break;
+                    case Keys.Left: result = WorkerMove(Direction.LEFT); break;
+                    case Keys.Right: result = WorkerMove(Direction.RIGHT); break;
+                }
+
+                if(result == DialogResult.Yes) gameStart();
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
         //----------------------------------------------------------------------------------------
-        private void WorkerMove(Direction direction)
+
+        private void btnStart_Click(object sender, EventArgs e)
         {
+            gameStart();
+        }
+        //----------------------------------------------------------------------------------------
+        private void gameStart()
+        {
+            gamePlay.field.loadStage(string.Format("{0}level-{1}.txt", stageFolder, StageNum));
+            displayInitStage();
+            gamePlay.Start();
+            this.KeyPreview = true;
+        }
+        //----------------------------------------------------------------------------------------
+        private void btnUndo_Click(object sender, EventArgs e)
+        {
+            gamePlay.Undo();
+            FieldUpdate(gamePlay.field.worker.Position, true);
+        }
+        //----------------------------------------------------------------------------------------
+        private DialogResult WorkerMove(Direction direction)
+        {
+            DialogResult result = DialogResult.No;
             Point rootPosition = gamePlay.field.worker.Position;  // worker가 처음 있던 위치 저장 
 
             gamePlay.moveWorker(direction);
-            FieldUpdate(rootPosition);
+            FieldUpdate(rootPosition, false);  // 화면을 갱신한다. 
 
-            if(gamePlay.CheckStageClear())
+            if(gamePlay.CheckStageClear())  // 게임이 완료 되었다.
             {
                 gamePlay.Stop();
-                MessageBox.Show("This Stage Cleared", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                StageNum++;  // 다음 스테이지로 넘어간다. 
+                result = MessageBox.Show("This Stage Cleared, Play the next stage?", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if(result == DialogResult.Yes) StageNum++;  // 다음 스테이지로 넘어간다. 
+
+                this.KeyPreview = false;
             }
+
+            return result;
         }
         //----------------------------------------------------------------------------------------
-        private void btnStart_Click(object sender, EventArgs e)
+        private void exitXToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            gamePlay.field.loadStage(string.Format("{0}level-{1}.txt",stageFolder, StageNum));
-            displayStage();
-            gamePlay.Start();
+            gamePlay.Stop();
+            Close();
         }
         //----------------------------------------------------------------------------------------
     }

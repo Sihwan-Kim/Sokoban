@@ -15,7 +15,10 @@ namespace Sokoban
         public int Steps { get; set; }
         public int Times { get; set; }  // unit = sec 
 
-        private System.Timers.Timer timer = new System.Timers.Timer();        
+        private System.Timers.Timer timer = new System.Timers.Timer();  
+        private Stack<UndoInform> undoInforms = new Stack<UndoInform>();    // 이동정보를 저장하기위한 스택(Undo 기능에 사용)
+
+        private Point[] changePosition = new Point[2] ;  // 이동 정보가 변경된 위치 
         //----------------------------------------------------------------------------------------
         public GamePlay()
         {
@@ -23,7 +26,12 @@ namespace Sokoban
             Times = 0;
 
             timer.Interval = 1000;
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed) ;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
+        }
+        //----------------------------------------------------------------------------------------
+        public Point getChangePosition(int index)
+        {
+            return changePosition[index];
         }
         //----------------------------------------------------------------------------------------
         private void timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -38,6 +46,7 @@ namespace Sokoban
             Steps = 0;
 
             timer.Start();
+            undoInforms.Clear();
         }
         //----------------------------------------------------------------------------------------
         public void Stop()
@@ -96,7 +105,60 @@ namespace Sokoban
                 field.worker.Position = movePosition;       // worker의 위치를 이동
                 field.fieldArray[movePosition.X, movePosition.Y] &= 0x0d ;  // worker가 이동해야 할 위치를 원래 객체로 변경한다.(박스가 있었다면 제거한다)  
 
-                if(obj == Constants.Box) field.fieldArray[otherPosition.X, otherPosition.Y] += obj ; // worker 가 이동해야할 위치의 박스를 다음위치로 이동한다. 
+                if(obj == Constants.Box)
+                {
+                    field.fieldArray[otherPosition.X, otherPosition.Y] += obj; // worker 가 이동해야할 위치의 박스를 다음위치로 이동한다. 
+                    undoInforms.Push(new UndoInform(direction, true));
+                }
+                else
+                {
+                    undoInforms.Push(new UndoInform(direction, false));
+                }
+
+                changePosition[0] = movePosition;
+                changePosition[1] = otherPosition;
+            }
+        }
+        //----------------------------------------------------------------------------------------
+        public void Undo()
+        {
+            if(undoInforms.Count > 0)
+            { 
+                var inform = undoInforms.Pop();
+
+                Point boxPosition = new Point(field.worker.Position.X, field.worker.Position.Y);   // 박스가 원래 있었던 위치 
+                Point currentPosition = new Point(field.worker.Position.X, field.worker.Position.Y);   // 박스의 현재 위치 
+
+                switch(inform.direction)    // 이동방향에 따라 worker와 Box 이동 위치 
+                {
+                    case Direction.TOP:
+                        field.worker.Position.Y++;
+                        currentPosition.Y--;
+                        break;
+                    case Direction.BOTTOM:
+                        field.worker.Position.Y--;
+                        currentPosition.Y++;
+                        break;
+                    case Direction.LEFT:                    
+                        field.worker.Position.X++;
+                        currentPosition.X--;
+                        break;
+                    case Direction.RIGHT:
+                        field.worker.Position.X--;
+                        currentPosition.X++;
+                        break;
+                }
+
+                if(inform.pushInform)  // 이전에 박스를 이동했다면 
+                {
+                    field.fieldArray[currentPosition.X, currentPosition.Y] &= 0x0d;  // 박스가 있던 위치의 초기화
+                    field.fieldArray[boxPosition.X, boxPosition.Y] += Constants.Box; // 원래 박스가 있던 위치에 박스를 옮긴다.
+                }
+
+                changePosition[0] = boxPosition;
+                changePosition[1] = currentPosition;
+                field.worker.MoveDirection = inform.direction;
+                Steps--;
             }
         }
         //----------------------------------------------------------------------------------------

@@ -17,6 +17,9 @@ namespace Sokoban
 
         public const int MapColumnCnt = 10;
         public const int MapRowCnt = 10;
+
+        public const int IconSize = 32;
+        public const int MaxStackCount = 10;
     }
 
     enum Direction { TOP, BOTTOM, LEFT, RIGHT };
