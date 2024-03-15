@@ -23,12 +23,11 @@ namespace Sokoban
         public frmMain()
         {
             InitializeComponent();
+            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\";  // 게임스테이지가 들어있는 폴더 설정 
+            makePlayGround(Constants.MapColumnCnt, Constants.MapRowCnt);             // 10x10 형식의 게임스테이지를 만든다. 
 
             gamePlay = new GamePlay();
             gamePlay.ReturnToTime += new GamePlay.UpdateTimeInform(UpdateTime);
-
-            makePlayGround(10, 10);                                                  // 10x10 형식의 게임스테이지를 만든다. 
-            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\";  // 게임스테이지가 들어있는 폴더 설정 
         }
         //----------------------------------------------------------------------------------------
         private void UpdateTime(string TimeInform)

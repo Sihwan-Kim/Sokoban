@@ -72,13 +72,12 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         public void moveWorker(Direction direction)
         {
-            Point movePosition = new Point(field.worker.Position.X, field.worker.Position.Y);   // worker의 이동 위치
-            Point otherPosition = new Point(field.worker.Position.X, field.worker.Position.Y);  // worker 이동 다음 위치 
+            Point movePosition = new Point(field.worker.Position.X, field.worker.Position.Y);   // worker가 이동해야 할 위치 
+            Point otherPosition = new Point(field.worker.Position.X, field.worker.Position.Y);  // worker가 이동한 위치의 다음위치 
 
             field.worker.MoveDirection = direction;  // worker 의 방향전환
-            field.fieldArray[field.worker.Position.X, field.worker.Position.Y] &= 0x0d; // worker 가 있던 위치의 초기화
-
-            switch(direction)    // 이동방향에 따라 worker의 이동 위치 
+ 
+            switch(direction)    // 이동방향에 따라 worker의 위치와 그 다음위치를 계산한다.
             {
                 case Direction.TOP:
                     movePosition.Y--;
@@ -98,22 +97,19 @@ namespace Sokoban
                     break;
             }
 
-            var obj = checkCanMove(movePosition, direction);            
+            var obj = checkCanMove(movePosition, direction);  // 이동해야할 위치로 이동할 수 있는지 확인한다.(이동위치의 객체를 리턴받는다.)          
 
             if(obj >= 0) // 이동 가능할 경우 
             {
                 field.worker.Position = movePosition;       // worker의 위치를 이동
-                field.fieldArray[movePosition.X, movePosition.Y] &= 0x0d ;  // worker가 이동해야 할 위치를 원래 객체로 변경한다.(박스가 있었다면 제거한다)  
 
                 if(obj == Constants.Box)
                 {
-                    field.fieldArray[otherPosition.X, otherPosition.Y] += obj; // worker 가 이동해야할 위치의 박스를 다음위치로 이동한다. 
-                    undoInforms.Push(new UndoInform(direction, true));
+                    field.fieldArray[movePosition.X, movePosition.Y] &= 0x0d ;  // worker가 이동해야 할 위치를 원래 객체로 변경한다.(& 0x0d :박스가 있었다면 제거한다)  
+                    field.fieldArray[otherPosition.X, otherPosition.Y] |= obj; // worker가 이동해야할 위치의 박스를 다음위치로 이동한다.               
                 }
-                else
-                {
-                    undoInforms.Push(new UndoInform(direction, false));
-                }
+
+                undoInforms.Push(new UndoInform(direction, obj == Constants.Box));  // undo 정보를 스텍에 저장
 
                 changePosition[0] = movePosition;
                 changePosition[1] = otherPosition;
@@ -152,7 +148,7 @@ namespace Sokoban
                 if(inform.pushInform)  // 이전에 박스를 이동했다면 
                 {
                     field.fieldArray[currentPosition.X, currentPosition.Y] &= 0x0d;  // 박스가 있던 위치의 초기화
-                    field.fieldArray[boxPosition.X, boxPosition.Y] += Constants.Box; // 원래 박스가 있던 위치에 박스를 옮긴다.
+                    field.fieldArray[boxPosition.X, boxPosition.Y] |= Constants.Box; // 원래 박스가 있던 위치에 박스를 옮긴다.
                 }
 
                 changePosition[0] = boxPosition;
