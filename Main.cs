@@ -76,6 +76,10 @@ namespace Sokoban
 
             labelLevel.Text = string.Format("Level-{0}", StageNum);
             labelStep.Text = "0";
+
+            gamePlay.loadHighScore(labelLevel.Text);
+            labelHighStep.Text = gamePlay.HighSteps.ToString();
+            labelHighTime.Text = string.Format("{0:D2}:{1:D2}", gamePlay.HighTimes / 60, gamePlay.HighTimes % 60);
         }
         //----------------------------------------------------------------------------------------
         private void FieldUpdate(Point RootPosition, bool Undo)
@@ -102,18 +106,6 @@ namespace Sokoban
             ((PictureBox)panelGameFiled.GetControlFromPosition(gamePlay.field.worker.Position.X, gamePlay.field.worker.Position.Y)!).Image = worker[(int)gamePlay.field.worker.MoveDirection];
 
             labelStep.Text = gamePlay.Steps.ToString();
-        }
-        //----------------------------------------------------------------------------------------
-        private void DirectionClick(object sender, EventArgs e)
-        {
-            Button? button = sender as Button;
-
-            if(KeyPreview && button is not null)
-            {
-                var result = WorkerMove((Direction)int.Parse(button.Tag!.ToString()!));
-
-                if(result == DialogResult.Yes) gameStart();
-            }
         }
         //----------------------------------------------------------------------------------------
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)  // 방향키에 대항 이벤트 처리
@@ -175,6 +167,7 @@ namespace Sokoban
             if(gamePlay.CheckStageClear())  // 게임이 완료 되었다.
             {
                 gamePlay.Stop();
+                gamePlay.saveHighScore(labelLevel.Text);
                 result = MessageBox.Show("This Stage Cleared, Play the next stage?", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if(result == DialogResult.Yes) StageNum++;  // 다음 스테이지로 넘어간다. 

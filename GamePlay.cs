@@ -15,6 +15,9 @@ namespace Sokoban
         public int Steps { get; set; }
         public int Times { get; set; }  // unit = sec 
 
+        public int HighSteps { get; set; } = 0;
+        public int HighTimes { get; set; } = 0;
+
         private System.Timers.Timer timer = new System.Timers.Timer();  
         private Stack<UndoInform> undoInforms = new Stack<UndoInform>();    // 이동정보를 저장하기위한 스택(Undo 기능에 사용)
 
@@ -32,6 +35,22 @@ namespace Sokoban
         public Point getChangePosition(int index)
         {
             return changePosition[index];
+        }
+        //----------------------------------------------------------------------------------------
+        public void saveHighScore(string StageNumber)
+        {
+            Utilities.IniFile iniFile = new Utilities.IniFile("Config.ini");
+
+            if(HighSteps == 0 || HighSteps > Steps) iniFile.WriteValue(StageNumber, "Steps", Steps);
+            if(HighTimes == 0 || HighTimes > Times) iniFile.WriteValue(StageNumber, "Times", Times);
+        }
+        //----------------------------------------------------------------------------------------
+        public void loadHighScore(string StageNumber)
+        {
+            Utilities.IniFile iniFile = new Utilities.IniFile("Config.ini");
+
+            HighSteps = iniFile.GetInt32(StageNumber, "Steps", 0);
+            HighTimes = iniFile.GetInt32(StageNumber, "Times", 0);
         }
         //----------------------------------------------------------------------------------------
         private void timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)

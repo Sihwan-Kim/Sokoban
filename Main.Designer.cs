@@ -34,10 +34,6 @@
             imageList1 = new ImageList(components);
             panelGameFiled = new TableLayoutPanel();
             btnUndo = new Button();
-            buttonTop = new Button();
-            buttonRight = new Button();
-            buttonLeft = new Button();
-            buttonDown = new Button();
             labelTime = new Label();
             label3 = new Label();
             labelStep = new Label();
@@ -53,6 +49,11 @@
             toolStripMenuItem1 = new ToolStripSeparator();
             exitXToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
+            labelHighTime = new Label();
+            label7 = new Label();
+            labelHighStep = new Label();
+            label9 = new Label();
+            label10 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -91,61 +92,13 @@
             // btnUndo
             // 
             btnUndo.Font = new Font("Tahoma", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnUndo.Location = new Point(46, 301);
+            btnUndo.Location = new Point(46, 318);
             btnUndo.Name = "btnUndo";
             btnUndo.Size = new Size(107, 29);
             btnUndo.TabIndex = 19;
             btnUndo.Text = "Undo";
             btnUndo.UseVisualStyleBackColor = true;
             btnUndo.Click += btnUndo_Click;
-            // 
-            // buttonTop
-            // 
-            buttonTop.ImageIndex = 3;
-            buttonTop.ImageList = imageList1;
-            buttonTop.Location = new Point(77, 131);
-            buttonTop.Name = "buttonTop";
-            buttonTop.Size = new Size(44, 44);
-            buttonTop.TabIndex = 18;
-            buttonTop.Tag = "0";
-            buttonTop.UseVisualStyleBackColor = true;
-            buttonTop.Click += DirectionClick;
-            // 
-            // buttonRight
-            // 
-            buttonRight.ImageIndex = 2;
-            buttonRight.ImageList = imageList1;
-            buttonRight.Location = new Point(127, 181);
-            buttonRight.Name = "buttonRight";
-            buttonRight.Size = new Size(44, 44);
-            buttonRight.TabIndex = 17;
-            buttonRight.Tag = "3";
-            buttonRight.UseVisualStyleBackColor = true;
-            buttonRight.Click += DirectionClick;
-            // 
-            // buttonLeft
-            // 
-            buttonLeft.ImageIndex = 1;
-            buttonLeft.ImageList = imageList1;
-            buttonLeft.Location = new Point(27, 181);
-            buttonLeft.Name = "buttonLeft";
-            buttonLeft.Size = new Size(44, 44);
-            buttonLeft.TabIndex = 16;
-            buttonLeft.Tag = "2";
-            buttonLeft.UseVisualStyleBackColor = true;
-            buttonLeft.Click += DirectionClick;
-            // 
-            // buttonDown
-            // 
-            buttonDown.ImageIndex = 0;
-            buttonDown.ImageList = imageList1;
-            buttonDown.Location = new Point(77, 181);
-            buttonDown.Name = "buttonDown";
-            buttonDown.Size = new Size(44, 44);
-            buttonDown.TabIndex = 15;
-            buttonDown.Tag = "1";
-            buttonDown.UseVisualStyleBackColor = true;
-            buttonDown.Click += DirectionClick;
             // 
             // labelTime
             // 
@@ -198,7 +151,7 @@
             // label4
             // 
             label4.BorderStyle = BorderStyle.Fixed3D;
-            label4.Location = new Point(0, 238);
+            label4.Location = new Point(0, 281);
             label4.Name = "label4";
             label4.Size = new Size(195, 1);
             label4.TabIndex = 21;
@@ -226,7 +179,7 @@
             // btnStart
             // 
             btnStart.Font = new Font("Tahoma", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnStart.Location = new Point(44, 266);
+            btnStart.Location = new Point(44, 289);
             btnStart.Name = "btnStart";
             btnStart.Size = new Size(109, 29);
             btnStart.TabIndex = 24;
@@ -278,12 +231,69 @@
             panel1.Size = new Size(519, 1);
             panel1.TabIndex = 26;
             // 
+            // labelHighTime
+            // 
+            labelHighTime.Font = new Font("Tahoma", 9.75F, FontStyle.Bold);
+            labelHighTime.ForeColor = Color.Red;
+            labelHighTime.Location = new Point(77, 200);
+            labelHighTime.Name = "labelHighTime";
+            labelHighTime.Size = new Size(76, 18);
+            labelHighTime.TabIndex = 30;
+            labelHighTime.Text = "00 : 00";
+            labelHighTime.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Tahoma", 9.75F, FontStyle.Bold);
+            label7.Location = new Point(20, 201);
+            label7.Name = "label7";
+            label7.Size = new Size(45, 16);
+            label7.TabIndex = 29;
+            label7.Text = "Time :";
+            // 
+            // labelHighStep
+            // 
+            labelHighStep.Font = new Font("Tahoma", 9.75F, FontStyle.Bold);
+            labelHighStep.ForeColor = Color.Red;
+            labelHighStep.Location = new Point(77, 172);
+            labelHighStep.Name = "labelHighStep";
+            labelHighStep.Size = new Size(76, 18);
+            labelHighStep.TabIndex = 28;
+            labelHighStep.Text = "0";
+            labelHighStep.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Tahoma", 9.75F, FontStyle.Bold);
+            label9.Location = new Point(12, 172);
+            label9.Name = "label9";
+            label9.Size = new Size(53, 16);
+            label9.TabIndex = 27;
+            label9.Text = "Steps :";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Tahoma", 9.75F, FontStyle.Bold);
+            label10.Location = new Point(12, 143);
+            label10.Name = "label10";
+            label10.Size = new Size(76, 16);
+            label10.TabIndex = 31;
+            label10.Text = "High Score";
+            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             ClientSize = new Size(519, 379);
+            Controls.Add(label10);
+            Controls.Add(labelHighTime);
+            Controls.Add(label7);
+            Controls.Add(labelHighStep);
+            Controls.Add(label9);
             Controls.Add(panel1);
             Controls.Add(btnStart);
             Controls.Add(labelLevel);
@@ -291,10 +301,6 @@
             Controls.Add(label4);
             Controls.Add(label2);
             Controls.Add(btnUndo);
-            Controls.Add(buttonTop);
-            Controls.Add(buttonRight);
-            Controls.Add(buttonLeft);
-            Controls.Add(buttonDown);
             Controls.Add(labelTime);
             Controls.Add(label3);
             Controls.Add(labelStep);
@@ -317,10 +323,6 @@
         private TableLayoutPanel panelGameFiled;
         private ImageList imageList1;
         private Button btnUndo;
-        private Button buttonTop;
-        private Button buttonRight;
-        private Button buttonLeft;
-        private Button buttonDown;
         private Label labelTime;
         private Label label3;
         private Label labelStep;
@@ -336,5 +338,10 @@
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem exitXToolStripMenuItem;
         private Panel panel1;
+        private Label labelHighTime;
+        private Label label7;
+        private Label labelHighStep;
+        private Label label9;
+        private Label label10;
     }
 }
