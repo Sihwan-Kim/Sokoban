@@ -14,37 +14,44 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         public void loadStage(string StageFile)
         {
-            using(StreamReader sr = new StreamReader(StageFile))
+            try
             {
-                string? position = sr.ReadLine();
-                string[] pos = position!.Split(',');
-                int index = 0;
-
-                worker.Position.X = int.Parse(pos[0]);
-                worker.Position.Y = int.Parse(pos[1]);
-
-                while(!sr.EndOfStream)
+                using(StreamReader sr = new StreamReader(StageFile))
                 {
-                    string? line = sr.ReadLine();
+                    string? position = sr.ReadLine();
+                    string[] pos = position!.Split(',');
+                    int index = 0;
 
-                    if(line is not null)
+                    worker.Position.X = int.Parse(pos[0]);
+                    worker.Position.Y = int.Parse(pos[1]);
+
+                    while(!sr.EndOfStream)
                     {
-                        string[] data = line.Split(',');
-                        int x = 0;
+                        string? line = sr.ReadLine();
 
-                        foreach(var value in data)
+                        if(line is not null)
                         {
-                            fieldArray[x++, index] = int.Parse(value) ;
-                        }
+                            string[] data = line.Split(',');
+                            int x = 0;
 
-                        index++;
+                            foreach(var value in data)
+                            {
+                                fieldArray[x++, index] = int.Parse(value);
+                            }
+
+                            index++;
+                        }
                     }
                 }
+            }
+            catch
+            {
+                MessageBox.Show("All games have been completed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         //----------------------------------------------------------------------------------------
     }
-
+    /*********************************************************************************************/
     internal class Worker
     {
         public Point Position = new Point(0,0);
@@ -52,7 +59,7 @@ namespace Sokoban
 
         public Worker(Point position) { this.Position = position; }
     }
-
+    /*********************************************************************************************/
     internal class UndoInform
     {
         public Direction direction;
@@ -64,4 +71,5 @@ namespace Sokoban
             this.pushInform = pushInform;
         }
     }
+    /*********************************************************************************************/
 }
