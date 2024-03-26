@@ -23,12 +23,11 @@ namespace Sokoban
         public frmMain()
         {
             InitializeComponent();
+            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\";  // 게임스테이지가 들어있는 폴더 설정 
+            makePlayGround(Constants.MapColumnCnt, Constants.MapRowCnt);             // 10x10 형식의 게임스테이지를 만든다. 
 
             gamePlay = new GamePlay();
             gamePlay.ReturnToTime += new GamePlay.UpdateTimeInform(UpdateTime);
-
-            makePlayGround(10, 10);                                                  // 10x10 형식의 게임스테이지를 만든다. 
-            stageFolder = System.Windows.Forms.Application.StartupPath + "stage\\";  // 게임스테이지가 들어있는 폴더 설정 
         }
         //----------------------------------------------------------------------------------------
         private void UpdateTime(string TimeInform)
@@ -81,6 +80,10 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void FieldUpdate(Point RootPosition, bool Undo)
         {
+            /*********************************************************
+             * 일반적인 이동에서는 최대 3개 픽셀에 변화가 생긴다.
+             * Undo 상황에서는 최대 2개 픽셀에 변화가 생긴다. 
+             *********************************************************/
             Point pos1 = gamePlay.getChangePosition(0);
             Point pos2 = gamePlay.getChangePosition(1);
 
@@ -113,7 +116,7 @@ namespace Sokoban
             }
         }
         //----------------------------------------------------------------------------------------
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)  // 방향키에 대항 이벤트 처리
         {
             if(KeyPreview)
             {
@@ -133,7 +136,6 @@ namespace Sokoban
             return base.ProcessCmdKey(ref msg, keyData);
         }
         //----------------------------------------------------------------------------------------
-
         private void btnStart_Click(object sender, EventArgs e)
         {
             gameStart();
@@ -141,10 +143,19 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void gameStart()
         {
-            gamePlay.field.loadStage(string.Format("{0}level-{1}.txt", stageFolder, StageNum));
-            displayInitStage();
-            gamePlay.Start();
-            this.KeyPreview = true;
+            var result = gamePlay.field.loadStage(string.Format("{0}level-{1}.txt", stageFolder, StageNum));
+
+            if(result == false)
+            {
+                this.KeyPreview = false;
+                MessageBox.Show("All games have been completed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                displayInitStage();
+                gamePlay.Start();
+                this.KeyPreview = true;
+            }
         }
         //----------------------------------------------------------------------------------------
         private void btnUndo_Click(object sender, EventArgs e)

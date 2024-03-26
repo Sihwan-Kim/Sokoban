@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Sokoban
 {
@@ -12,8 +13,10 @@ namespace Sokoban
 
         }
         //----------------------------------------------------------------------------------------
-        public void loadStage(string StageFile)
+        public bool loadStage(string StageFile)
         {
+            bool reuslt = true;
+
             try
             {
                 using(StreamReader sr = new StreamReader(StageFile))
@@ -22,8 +25,8 @@ namespace Sokoban
                     string[] pos = position!.Split(',');
                     int index = 0;
 
-                    worker.Position.X = int.Parse(pos[0]);
-                    worker.Position.Y = int.Parse(pos[1]);
+                    worker.Position.X = int.Parse(pos[0]);   // 작업자의 X 위치
+                    worker.Position.Y = int.Parse(pos[1]);   // 작업자의 Y 위치
 
                     while(!sr.EndOfStream)
                     {
@@ -46,8 +49,10 @@ namespace Sokoban
             }
             catch
             {
-                MessageBox.Show("All games have been completed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                reuslt = false;
             }
+
+            return reuslt;
         }
         //----------------------------------------------------------------------------------------
     }
