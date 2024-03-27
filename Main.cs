@@ -28,6 +28,10 @@ namespace Sokoban
 
             gamePlay = new GamePlay();
             gamePlay.ReturnToTime += new GamePlay.UpdateTimeInform(UpdateTime);
+
+            loadStageNum();     // config 파일에 저장된 스테이지 번호를 불러온다. 
+
+            gameStart();        // 게임을 시작한다. 
         }
         //----------------------------------------------------------------------------------------
         private void UpdateTime(string TimeInform)
@@ -77,7 +81,7 @@ namespace Sokoban
             labelLevel.Text = string.Format("Level-{0}", StageNum);
             labelStep.Text = "0";
 
-            gamePlay.loadHighScore(labelLevel.Text);
+            gamePlay.loadHighScore(labelLevel.Text);        // 현재 스테이지의 최고 점수를 불러와서 화면에 보여준다.
             labelHighStep.Text = gamePlay.HighSteps.ToString();
             labelHighTime.Text = string.Format("{0:D2}:{1:D2}", gamePlay.HighTimes / 60, gamePlay.HighTimes % 60);
         }
@@ -130,6 +134,7 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void btnStart_Click(object sender, EventArgs e)
         {
+            StageNum = 1;            
             gameStart();
         }
         //----------------------------------------------------------------------------------------
@@ -178,10 +183,28 @@ namespace Sokoban
             return result;
         }
         //----------------------------------------------------------------------------------------
+        public void saveStageNum()
+        {
+            Utilities.IniFile iniFile = new Utilities.IniFile("Config.ini");
+
+            iniFile.WriteValue("Sokoban", "Stage Number", StageNum);
+        }
+        //----------------------------------------------------------------------------------------
+        public void loadStageNum()
+        {
+            Utilities.IniFile iniFile = new Utilities.IniFile("Config.ini");
+
+            StageNum = iniFile.GetInt32("Sokoban", "Stage Number", 1);
+        }
+        //----------------------------------------------------------------------------------------
         private void exitXToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var result = MessageBox.Show("Would you like to save the current state and exit?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if(result == DialogResult.Yes) saveStageNum();
+            
             gamePlay.Stop();
-            Close();
+            Close();            
         }
         //----------------------------------------------------------------------------------------
     }
