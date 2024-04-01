@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Windows.Devices.Display.Core;
 using Windows.Gaming.Input;
 
@@ -134,7 +135,7 @@ namespace Sokoban
         //----------------------------------------------------------------------------------------
         private void btnStart_Click(object sender, EventArgs e)
         {
-            StageNum = 1;            
+            StageNum = 1;
             gameStart();
         }
         //----------------------------------------------------------------------------------------
@@ -202,9 +203,26 @@ namespace Sokoban
             var result = MessageBox.Show("Would you like to save the current state and exit?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if(result == DialogResult.Yes) saveStageNum();
-            
+
             gamePlay.Stop();
-            Close();            
+            Close();
+        }
+        //----------------------------------------------------------------------------------------
+        private void openOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Stage 파일 오픈";
+            ofd.Filter = "Stage(*.txt) | *.txt; | 모든 파일 (*.*) | *.*";
+            ofd.InitialDirectory = stageFolder;
+
+            DialogResult dr = ofd.ShowDialog();
+
+            //OK버튼 클릭시
+            if(dr == DialogResult.OK)
+            {
+                StageNum = int.Parse(Regex.Replace(Path.GetFileName(ofd.FileName), @"\D", "")) ;
+                gameStart();
+            }
         }
         //----------------------------------------------------------------------------------------
     }

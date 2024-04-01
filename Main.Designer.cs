@@ -208,19 +208,20 @@
             // openOToolStripMenuItem
             // 
             openOToolStripMenuItem.Name = "openOToolStripMenuItem";
-            openOToolStripMenuItem.Size = new Size(149, 22);
+            openOToolStripMenuItem.Size = new Size(180, 22);
             openOToolStripMenuItem.Text = "Open(O)";
+            openOToolStripMenuItem.Click += openOToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(146, 6);
+            toolStripMenuItem1.Size = new Size(177, 6);
             // 
             // exitXToolStripMenuItem
             // 
             exitXToolStripMenuItem.Name = "exitXToolStripMenuItem";
             exitXToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
-            exitXToolStripMenuItem.Size = new Size(149, 22);
+            exitXToolStripMenuItem.Size = new Size(180, 22);
             exitXToolStripMenuItem.Text = "Exit(X)";
             exitXToolStripMenuItem.Click += exitXToolStripMenuItem_Click;
             // 
